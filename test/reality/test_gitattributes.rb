@@ -14,15 +14,15 @@
 
 require File.expand_path('../../helper', __FILE__)
 
-class Reality::TestAttributes < Reality::TestCase
+class Reality::TestGitAttributes < Reality::TestCase
   def test_basic_operation_using_default_attribtues
     content = <<TEXT
 * -text
 TEXT
-    dir = random_local_dir
+    dir = working_dir
     write_standard_file(dir, content)
 
-    attributes = Reality::Git::Attributes.new(dir)
+    attributes = Reality::GitAttributes.new(dir)
     assert_equal({ "#{dir}/*" => { 'text' => false } }, attributes.patterns)
 
     assert_equal({ 'text' => false }, attributes.attributes('README.md'))
@@ -32,11 +32,11 @@ TEXT
     content = <<TEXT
 * -text
 TEXT
-    dir = random_local_dir
+    dir = working_dir
     attributes_file = "#{dir}/non-standard-gitattributes"
     write_file(attributes_file, content)
 
-    attributes = Reality::Git::Attributes.new(dir, attributes_file)
+    attributes = Reality::GitAttributes.new(dir, attributes_file)
     assert_equal({ "#{dir}/*" => { 'text' => false } }, attributes.patterns)
 
     assert_equal({ 'text' => false }, attributes.attributes('README.md'))
@@ -47,10 +47,10 @@ TEXT
     content = <<TEXT
 *.textile text -crlf -binary
 TEXT
-    dir = random_local_dir
+    dir = working_dir
     write_standard_file(dir, content)
 
-    attributes = Reality::Git::Attributes.new(dir)
+    attributes = Reality::GitAttributes.new(dir)
     assert_equal({ "#{dir}/*.textile" => { 'text' => true, 'crlf' => false, 'binary' => false } },
                  attributes.patterns)
 
@@ -64,10 +64,10 @@ TEXT
 * -text
 *.textile text -crlf -binary
 TEXT
-    dir = random_local_dir
+    dir = working_dir
     write_standard_file(dir, content)
 
-    attributes = Reality::Git::Attributes.new(dir)
+    attributes = Reality::GitAttributes.new(dir)
     assert_equal({
                    "#{dir}/*" => { 'text' => false },
                    "#{dir}/*.textile" => { 'text' => true, 'crlf' => false, 'binary' => false }
@@ -84,10 +84,10 @@ TEXT
 * -text
 # DO NOT EDIT: File is auto-generated
 TEXT
-    dir = random_local_dir
+    dir = working_dir
     write_standard_file(dir, content)
 
-    attributes = Reality::Git::Attributes.new(dir)
+    attributes = Reality::GitAttributes.new(dir)
     assert_equal({ "#{dir}/*" => { 'text' => false } }, attributes.patterns)
   end
 
