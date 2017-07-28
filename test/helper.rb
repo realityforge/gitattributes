@@ -1,5 +1,6 @@
 $:.unshift File.expand_path('../../lib', __FILE__)
 
+require 'securerandom'
 require 'minitest/autorun'
 require 'test/unit/assertions'
 require 'reality/attributes'
@@ -45,5 +46,9 @@ class Reality::TestCase < Minitest::Test
 
   def workspace_dir
     @workspace_dir ||= File.expand_path(ENV['TEST_TMP_DIR'] || "#{File.dirname(__FILE__)}/../tmp/workspace")
+  end
+
+  def random_string
+    ::SecureRandom.hex
   end
 end
