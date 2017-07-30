@@ -6,7 +6,7 @@ module Reality
   #
   #     attributes = Reality::Git::Attributes.new(some_repo.path)
   #
-  #     attributes.attributes('README.md') # => { "eol" => "lf }
+  #     attributes.attributes('README.md') # => { "eol" => "lf" }
   class GitAttributes
     # path - The path to the Git repository.
     # attributes_file - The path to the ".gitattribtues" file. Defaults to "<path>/.gitattribtues".
