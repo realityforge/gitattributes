@@ -19,11 +19,11 @@ class Reality::TestGitAttributes < Reality::TestCase
     content = <<TEXT
 * -text
 TEXT
-    dir = working_dir
+    dir = "#{working_dir}/#{::SecureRandom.hex}"
     write_standard_file(dir, content)
 
     attributes = Reality::GitAttributes.new(dir)
-    assert_equal({ "#{dir}/*" => { 'text' => false } }, attributes.patterns)
+    assert_equal({ '*' => { 'text' => false } }, attributes.patterns)
 
     assert_equal({ 'text' => false }, attributes.attributes('README.md'))
   end
@@ -32,12 +32,12 @@ TEXT
     content = <<TEXT
 * -text
 TEXT
-    dir = working_dir
+    dir = "#{working_dir}/#{::SecureRandom.hex}"
     attributes_file = "#{dir}/non-standard-gitattributes"
     write_file(attributes_file, content)
 
     attributes = Reality::GitAttributes.new(dir, attributes_file)
-    assert_equal({ "#{dir}/*" => { 'text' => false } }, attributes.patterns)
+    assert_equal({ '*' => { 'text' => false } }, attributes.patterns)
 
     assert_equal({ 'text' => false }, attributes.attributes('README.md'))
     assert_equal({ 'text' => false }, attributes.attributes('docs/README.md'))
@@ -47,11 +47,11 @@ TEXT
     content = <<TEXT
 *.textile text -crlf -binary
 TEXT
-    dir = working_dir
+    dir = "#{working_dir}/#{::SecureRandom.hex}"
     write_standard_file(dir, content)
 
     attributes = Reality::GitAttributes.new(dir)
-    assert_equal({ "#{dir}/*.textile" => { 'text' => true, 'crlf' => false, 'binary' => false } },
+    assert_equal({ '*.textile' => { 'text' => true, 'crlf' => false, 'binary' => false } },
                  attributes.patterns)
 
     assert_equal({}, attributes.attributes('README.md'))
@@ -64,13 +64,13 @@ TEXT
 * -text
 *.textile text -crlf -binary
 TEXT
-    dir = working_dir
+    dir = "#{working_dir}/#{::SecureRandom.hex}"
     write_standard_file(dir, content)
 
     attributes = Reality::GitAttributes.new(dir)
     assert_equal({
-                   "#{dir}/*" => { 'text' => false },
-                   "#{dir}/*.textile" => { 'text' => true, 'crlf' => false, 'binary' => false }
+                   '*' => { 'text' => false },
+                   '*.textile' => { 'text' => true, 'crlf' => false, 'binary' => false }
                  },
                  attributes.patterns)
 
@@ -84,11 +84,25 @@ TEXT
 * -text
 # DO NOT EDIT: File is auto-generated
 TEXT
-    dir = working_dir
+    dir = "#{working_dir}/#{::SecureRandom.hex}"
     write_standard_file(dir, content)
 
     attributes = Reality::GitAttributes.new(dir)
-    assert_equal({ "#{dir}/*" => { 'text' => false } }, attributes.patterns)
+    assert_equal({ '*' => { 'text' => false } }, attributes.patterns)
+  end
+
+  def test_relative_dir
+    content = <<TEXT
+doc/*.md text
+TEXT
+    dir = "#{working_dir}/#{::SecureRandom.hex}"
+    write_standard_file(dir, content)
+
+    attributes = Reality::GitAttributes.new(dir)
+    assert_equal({ 'doc/*.md' => { 'text' => true } }, attributes.patterns)
+
+    assert_equal({}, attributes.attributes('README.md'))
+    assert_equal({ 'text' => true }, attributes.attributes('doc/X.md'))
   end
 
   def write_standard_file(dir, content)

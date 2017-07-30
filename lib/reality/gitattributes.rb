@@ -25,7 +25,7 @@ module Reality
       full_path = File.join(@path, path)
 
       self.patterns.each do |pattern, attrs|
-        return attrs if File.fnmatch?(pattern, full_path)
+        return attrs if File.fnmatch?(File.join(@path, pattern), full_path)
       end
 
       {}
@@ -112,7 +112,7 @@ module Reality
 
         parsed = attrs ? parse_attributes(attrs) : {}
 
-        pairs << [File.join(@path, pattern), parsed]
+        pairs << [pattern, parsed]
       end
 
       # Newer entries take precedence over older entries.
