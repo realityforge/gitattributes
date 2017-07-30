@@ -24,7 +24,7 @@ module Reality
     def attributes(path)
       full_path = File.join(@path, path)
 
-      patterns.each do |pattern, attrs|
+      self.patterns.each do |pattern, attrs|
         return attrs if File.fnmatch?(pattern, full_path)
       end
 
