@@ -24,8 +24,7 @@
 
 module Reality #nodoc
   module Git
-    # Parse the Git attribute file and extracting the attributes for
-    # file patterns.
+    # Parse the Git attribute file extracting the attributes for file patterns.
     module AttributesParser
       class << self
 
