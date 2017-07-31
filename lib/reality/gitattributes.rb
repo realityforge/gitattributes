@@ -12,6 +12,7 @@
 # limitations under the License.
 #
 
+require 'reality/git/attribute_rule'
 require 'reality/git/attributes_parser'
 
 module Reality #nodoc
