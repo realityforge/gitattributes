@@ -1,6 +1,6 @@
 require 'reality/git/attributes_parser'
 
-module Reality
+module Reality #nodoc
   # Class for parsing Git attribute files and extracting the attributes for
   # file patterns.
   #
