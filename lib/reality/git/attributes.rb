@@ -57,6 +57,22 @@ module Reality #nodoc
         IO.write(filename, prefix + content)
       end
 
+      def rule(pattern, attributes)
+        @rules << AttributeRule.new(pattern, attributes)
+      end
+
+      def text_rule(pattern, attributes = {})
+        rule(pattern, { :text => true, :crlf => false, :binary => false }.merge(attributes))
+      end
+
+      def dos_text_rule(pattern, attributes = {})
+        text_rule(pattern, { :crlf => true }.merge(attributes))
+      end
+
+      def binary_rule(pattern, attributes = {})
+        rule(pattern, { :binary => true }.merge(attributes))
+      end
+
       # Returns a list of attribute rules to apply.
       def rules
         @rules.dup

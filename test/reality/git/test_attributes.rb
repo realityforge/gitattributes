@@ -206,6 +206,70 @@ TEXT
 TEXT
   end
 
+  def test_add_rule
+    dir = "#{working_dir}/#{::SecureRandom.hex}"
+
+    attributes = Reality::Git::Attributes.new(dir)
+
+    assert_equal([], attributes.rules.collect {|p| p.to_s})
+
+    attributes.rule('*', :text => false)
+
+    assert_equal(['* -text'], attributes.rules.collect {|p| p.to_s})
+  end
+
+  def test_add_multiple_rules
+    dir = "#{working_dir}/#{::SecureRandom.hex}"
+
+    attributes = Reality::Git::Attributes.new(dir)
+
+    assert_equal([], attributes.rules.collect {|p| p.to_s})
+
+    attributes.rule('*', :text => false)
+    attributes.rule('*.so', :text => false)
+
+    assert_equal(['* -text', '*.so -text'], attributes.rules.collect {|p| p.to_s})
+  end
+
+  def test_add_text_rule
+    dir = "#{working_dir}/#{::SecureRandom.hex}"
+
+    attributes = Reality::Git::Attributes.new(dir)
+
+    assert_equal([], attributes.rules.collect {|p| p.to_s})
+
+    attributes.text_rule('*.md')
+    attributes.text_rule('*.rake', :eofnl => false)
+
+    assert_equal(['*.md text -crlf -binary', '*.rake text -crlf -binary -eofnl'], attributes.rules.collect {|p| p.to_s})
+  end
+
+  def test_add_dos_text_rule
+    dir = "#{working_dir}/#{::SecureRandom.hex}"
+
+    attributes = Reality::Git::Attributes.new(dir)
+
+    assert_equal([], attributes.rules.collect {|p| p.to_s})
+
+    attributes.dos_text_rule('*.cmd')
+    attributes.dos_text_rule('*.rdl', :eofnl => false)
+
+    assert_equal(['*.cmd text crlf -binary', '*.rdl text crlf -binary -eofnl'], attributes.rules.collect {|p| p.to_s})
+  end
+
+  def test_add_binary_rule
+    dir = "#{working_dir}/#{::SecureRandom.hex}"
+
+    attributes = Reality::Git::Attributes.new(dir)
+
+    assert_equal([], attributes.rules.collect {|p| p.to_s})
+
+    attributes.binary_rule('*.jpg')
+    attributes.binary_rule('*.jpg', :category => 3)
+
+    assert_equal(['*.jpg binary', '*.jpg binary category=3'], attributes.rules.collect {|p| p.to_s})
+  end
+
   def write_standard_file(dir, content)
     write_file("#{dir}/.gitattributes", content)
   end
