@@ -24,7 +24,7 @@ TEXT
 
     attributes = Reality::Git::Attributes.parse(dir)
     assert_equal("#{dir}/.gitattributes", attributes.attributes_file)
-    assert_equal(['* -text'], attributes.rules.collect{|p|p.to_s})
+    assert_equal(['* -text'], attributes.rules.collect {|p| p.to_s})
 
     assert_equal({ 'text' => false }, attributes.attributes('README.md'))
   end
@@ -39,7 +39,7 @@ TEXT
 
     attributes = Reality::Git::Attributes.parse(dir, attributes_file)
     assert_equal(attributes_file, attributes.attributes_file)
-    assert_equal(['* -text'], attributes.rules.collect{|p|p.to_s})
+    assert_equal(['* -text'], attributes.rules.collect {|p| p.to_s})
 
     assert_equal({ 'text' => false }, attributes.attributes('README.md'))
     assert_equal({ 'text' => false }, attributes.attributes('docs/README.md'))
@@ -53,7 +53,7 @@ TEXT
     write_standard_file(dir, content)
 
     attributes = Reality::Git::Attributes.parse(dir)
-    assert_equal(['*.textile text -crlf -binary'], attributes.rules.collect{|p|p.to_s})
+    assert_equal(['*.textile text -crlf -binary'], attributes.rules.collect {|p| p.to_s})
 
     assert_equal({}, attributes.attributes('README.md'))
     assert_equal({ 'text' => true, 'crlf' => false, 'binary' => false }, attributes.attributes('README.textile'))
@@ -69,7 +69,7 @@ TEXT
     write_standard_file(dir, content)
 
     attributes = Reality::Git::Attributes.parse(dir)
-    assert_equal(['* -text', '*.textile text -crlf -binary'], attributes.rules.collect{|p|p.to_s})
+    assert_equal(['* -text', '*.textile text -crlf -binary'], attributes.rules.collect {|p| p.to_s})
 
     assert_equal({ 'text' => false }, attributes.attributes('README.md'))
     assert_equal({ 'text' => true, 'crlf' => false, 'binary' => false }, attributes.attributes('doc/X.textile'))
@@ -86,7 +86,7 @@ TEXT
 
     attributes = Reality::Git::Attributes.parse(dir)
     assert_equal("#{dir}/.gitattributes", attributes.attributes_file)
-    assert_equal(['* -text'], attributes.rules.collect{|p|p.to_s})
+    assert_equal(['* -text'], attributes.rules.collect {|p| p.to_s})
   end
 
   def test_relative_dir
@@ -98,7 +98,7 @@ TEXT
 
     attributes = Reality::Git::Attributes.parse(dir)
     assert_equal("#{dir}/.gitattributes", attributes.attributes_file)
-    assert_equal(['doc/*.md text'], attributes.rules.collect{|p|p.to_s})
+    assert_equal(['doc/*.md text'], attributes.rules.collect {|p| p.to_s})
 
     assert_equal({}, attributes.attributes('README.md'))
     assert_equal({ 'text' => true }, attributes.attributes('doc/X.md'))
@@ -114,7 +114,7 @@ TEXT
 
     attributes = Reality::Git::Attributes.parse(dir, attributes_file)
     assert_equal(attributes_file, attributes.attributes_file)
-    assert_equal(['* -text'], attributes.rules.collect{|p|p.to_s})
+    assert_equal(['* -text'], attributes.rules.collect {|p| p.to_s})
 
     assert_equal({}, attributes.attributes('README.md'))
     assert_equal({ 'text' => false }, attributes.attributes('foo/docs/README.md'))
@@ -129,7 +129,7 @@ TEXT
 
     attributes = Reality::Git::Attributes.parse(dir)
     assert_equal("#{dir}/.gitattributes", attributes.attributes_file)
-    assert_equal(['* -text'], attributes.rules.collect{|p|p.to_s})
+    assert_equal(['* -text'], attributes.rules.collect {|p| p.to_s})
 
     output_filename = "#{dir}/output_gitattributes"
     attributes.write_to(output_filename)
@@ -150,7 +150,7 @@ TEXT
 
     attributes = Reality::Git::Attributes.parse(dir)
     assert_equal("#{dir}/.gitattributes", attributes.attributes_file)
-    assert_equal(['*.md text', '* -text', '*.java text'], attributes.rules.collect{|p|p.to_s})
+    assert_equal(['*.md text', '* -text', '*.java text'], attributes.rules.collect {|p| p.to_s})
 
     output_filename = "#{dir}/output_gitattributes"
     attributes.write_to(output_filename)
@@ -174,7 +174,7 @@ TEXT
 
     attributes = Reality::Git::Attributes.parse(dir)
     assert_equal("#{dir}/.gitattributes", attributes.attributes_file)
-    assert_equal(['*.md text', '* -text', '*.java text', '*.java text'], attributes.rules.collect{|p|p.to_s})
+    assert_equal(['*.md text', '* -text', '*.java text', '*.java text'], attributes.rules.collect {|p| p.to_s})
 
     output_filename = "#{dir}/output_gitattributes"
     attributes.write_to(output_filename, :normalize => true)
@@ -195,7 +195,7 @@ TEXT
 
     attributes = Reality::Git::Attributes.parse(dir)
     assert_equal("#{dir}/.gitattributes", attributes.attributes_file)
-    assert_equal(['* -text'], attributes.rules.collect{|p|p.to_s})
+    assert_equal(['* -text'], attributes.rules.collect {|p| p.to_s})
 
     output_filename = "#{dir}/output_gitattributes"
     attributes.write_to(output_filename, :prefix => '# DO NOT EDIT: File is auto-generated')
