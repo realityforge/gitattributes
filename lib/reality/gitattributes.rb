@@ -20,7 +20,7 @@ module Reality #nodoc
   #
   # Basic usage:
   #
-  #     attributes = Reality::Git::Attributes.new(some_repo_path)
+  #     attributes = Reality::GitAttributes.new(some_repo_path)
   #
   #     attributes.attributes('README.md') # => { "eol" => "lf" }
   class GitAttributes
