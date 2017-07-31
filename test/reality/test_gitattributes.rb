@@ -23,6 +23,7 @@ TEXT
     write_standard_file(dir, content)
 
     attributes = Reality::GitAttributes.new(dir)
+    assert_equal("#{dir}/.gitattributes", attributes.attributes_file)
     assert_equal({ '*' => { 'text' => false } }, attributes.patterns)
 
     assert_equal({ 'text' => false }, attributes.attributes('README.md'))
@@ -37,6 +38,7 @@ TEXT
     write_file(attributes_file, content)
 
     attributes = Reality::GitAttributes.new(dir, attributes_file)
+    assert_equal(attributes_file, attributes.attributes_file)
     assert_equal({ '*' => { 'text' => false } }, attributes.patterns)
 
     assert_equal({ 'text' => false }, attributes.attributes('README.md'))
@@ -88,6 +90,7 @@ TEXT
     write_standard_file(dir, content)
 
     attributes = Reality::GitAttributes.new(dir)
+    assert_equal("#{dir}/.gitattributes", attributes.attributes_file)
     assert_equal({ '*' => { 'text' => false } }, attributes.patterns)
   end
 
@@ -99,6 +102,7 @@ TEXT
     write_standard_file(dir, content)
 
     attributes = Reality::GitAttributes.new(dir)
+    assert_equal("#{dir}/.gitattributes", attributes.attributes_file)
     assert_equal({ 'doc/*.md' => { 'text' => true } }, attributes.patterns)
 
     assert_equal({}, attributes.attributes('README.md'))

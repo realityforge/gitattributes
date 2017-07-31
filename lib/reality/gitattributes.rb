@@ -34,6 +34,8 @@ module Reality #nodoc
         File.exist?(@attributes_file) ? Reality::Git::AttributesParser.parse_file(@attributes_file) : {}
     end
 
+    attr_reader :attributes_file
+
     # Returns all the Git attributes for the given path.
     #
     # path - A path to a file for which to get the attributes.
