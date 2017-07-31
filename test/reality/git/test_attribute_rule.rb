@@ -47,4 +47,13 @@ class Reality::Git::TestAttributeRule < Reality::TestCase
     assert_equal(1, rule2 <=> rule3)
     assert_equal([rule3, rule1, rule2], [rule1, rule2, rule3].sort)
   end
+
+  def test_eql
+    rule1 = Reality::Git::AttributeRule.new('*.a', 'priority' => 2, 'text' => true)
+    rule2 = Reality::Git::AttributeRule.new('*.a', 'priority' => 3, 'text' => true)
+    assert_equal(true, rule1.eql?(rule1))
+    assert_equal(rule1.hash, rule1.hash)
+    assert_equal(false, rule1.eql?(rule2))
+    assert_not_equal(rule1.hash, rule2.hash)
+  end
 end

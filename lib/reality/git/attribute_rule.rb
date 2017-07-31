@@ -57,6 +57,14 @@ module Reality #nodoc
         end
       end
 
+      def eql?(other)
+        self.pattern == other.pattern && self.attributes == other.attributes && self.priority == other.priority
+      end
+
+      def hash
+        self.pattern.hash + self.attributes.hash + self.priority
+      end
+
       def <=>(other)
         order = self.priority <=> other.priority
         if 0 != order
