@@ -34,4 +34,17 @@ class Reality::Git::TestAttributeRule < Reality::TestCase
     assert_equal({ 'eofnl' => false, 'text' => true, 'crlf' => true, 'binary' => false, 'ms-file' => 'RPT', 'age' => '22' }, rule.attributes)
     assert_equal('*.rdl text crlf -binary -eofnl age=22 ms-file=RPT', rule.to_s)
   end
+
+  def test_sorting
+    rule1 = Reality::Git::AttributeRule.new('*.a', 'priority' => 2, 'text' => true)
+    rule2 = Reality::Git::AttributeRule.new('*.b', 'priority' => 2, 'text' => true)
+    rule3 = Reality::Git::AttributeRule.new('*.c', 'priority' => 1, 'text' => true)
+    assert_equal(0, rule1 <=> rule1)
+    assert_equal(0, rule2 <=> rule2)
+    assert_equal(0, rule3 <=> rule3)
+    assert_equal(-1, rule1 <=> rule2)
+    assert_equal(1, rule1 <=> rule3)
+    assert_equal(1, rule2 <=> rule3)
+    assert_equal([rule3, rule1, rule2], [rule1, rule2, rule3].sort)
+  end
 end
