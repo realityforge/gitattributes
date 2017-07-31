@@ -53,7 +53,7 @@ module Reality #nodoc
       {}
     end
 
-    # Returns a Hash containing the file patterns and their attributes.
+    # Returns a list of attribute rules to apply.
     def patterns
       @patterns.dup
     end
