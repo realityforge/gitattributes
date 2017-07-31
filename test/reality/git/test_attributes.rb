@@ -120,6 +120,92 @@ TEXT
     assert_equal({ 'text' => false }, attributes.attributes('foo/docs/README.md'))
   end
 
+  def test_write_to
+    content = <<TEXT
+* -text
+TEXT
+    dir = "#{working_dir}/#{::SecureRandom.hex}"
+    write_standard_file(dir, content)
+
+    attributes = Reality::Git::Attributes.parse(dir)
+    assert_equal("#{dir}/.gitattributes", attributes.attributes_file)
+    assert_equal(['* -text'], attributes.rules.collect{|p|p.to_s})
+
+    output_filename = "#{dir}/output_gitattributes"
+    attributes.write_to(output_filename)
+
+    assert_equal(<<TEXT, IO.read(output_filename))
+* -text
+TEXT
+  end
+
+  def test_write_to_with_multiple_rules
+    content = <<TEXT
+*.md text
+* -text
+*.java text
+TEXT
+    dir = "#{working_dir}/#{::SecureRandom.hex}"
+    write_standard_file(dir, content)
+
+    attributes = Reality::Git::Attributes.parse(dir)
+    assert_equal("#{dir}/.gitattributes", attributes.attributes_file)
+    assert_equal(['*.md text', '* -text', '*.java text'], attributes.rules.collect{|p|p.to_s})
+
+    output_filename = "#{dir}/output_gitattributes"
+    attributes.write_to(output_filename)
+
+    assert_equal(<<TEXT, IO.read(output_filename))
+*.md text
+* -text
+*.java text
+TEXT
+  end
+
+  def test_write_to_with_normalization
+    content = <<TEXT
+*.md text
+* -text
+*.java text
+*.java text
+TEXT
+    dir = "#{working_dir}/#{::SecureRandom.hex}"
+    write_standard_file(dir, content)
+
+    attributes = Reality::Git::Attributes.parse(dir)
+    assert_equal("#{dir}/.gitattributes", attributes.attributes_file)
+    assert_equal(['*.md text', '* -text', '*.java text', '*.java text'], attributes.rules.collect{|p|p.to_s})
+
+    output_filename = "#{dir}/output_gitattributes"
+    attributes.write_to(output_filename, :normalize => true)
+
+    assert_equal(<<TEXT, IO.read(output_filename))
+* -text
+*.java text
+*.md text
+TEXT
+  end
+
+  def test_write_to_with_prefix
+    content = <<TEXT
+* -text
+TEXT
+    dir = "#{working_dir}/#{::SecureRandom.hex}"
+    write_standard_file(dir, content)
+
+    attributes = Reality::Git::Attributes.parse(dir)
+    assert_equal("#{dir}/.gitattributes", attributes.attributes_file)
+    assert_equal(['* -text'], attributes.rules.collect{|p|p.to_s})
+
+    output_filename = "#{dir}/output_gitattributes"
+    attributes.write_to(output_filename, :prefix => '# DO NOT EDIT: File is auto-generated')
+
+    assert_equal(<<TEXT, IO.read(output_filename))
+# DO NOT EDIT: File is auto-generated
+* -text
+TEXT
+  end
+
   def write_standard_file(dir, content)
     write_file("#{dir}/.gitattributes", content)
   end
