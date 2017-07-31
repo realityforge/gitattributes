@@ -21,7 +21,7 @@ module Reality #nodoc
       def initialize(pattern, attributes)
         @pattern = pattern
         @attributes = attributes.dup
-        @priority = attributes.delete('priority') || 1
+        @priority = @attributes.delete('priority') || 1
       end
 
       attr_reader :pattern

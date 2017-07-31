@@ -22,6 +22,13 @@ class Reality::Git::TestAttributeRule < Reality::TestCase
     assert_equal(1, rule.priority)
   end
 
+  def test_priority_specified
+    rule = Reality::Git::AttributeRule.new('*', 'text' => false, 'priority' => 3)
+    assert_equal(3, rule.priority)
+    assert_equal({ 'text' => false }, rule.attributes)
+    assert_equal('* -text', rule.to_s)
+  end
+
   def test_many_attributes
     rule = Reality::Git::AttributeRule.new('*.rdl', 'eofnl' => false, 'text' => true, 'crlf' => true, 'binary' => false, 'ms-file' => 'RPT', 'age' => '22')
     assert_equal({ 'eofnl' => false, 'text' => true, 'crlf' => true, 'binary' => false, 'ms-file' => 'RPT', 'age' => '22' }, rule.attributes)
