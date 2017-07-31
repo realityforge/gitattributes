@@ -12,9 +12,9 @@
 # limitations under the License.
 #
 
-require File.expand_path('../../helper', __FILE__)
+require File.expand_path('../../../helper', __FILE__)
 
-class Reality::TestGitAttributes < Reality::TestCase
+class Reality::TestAttributes < Reality::TestCase
   def test_basic_operation_using_default_attributes
     content = <<TEXT
 * -text
