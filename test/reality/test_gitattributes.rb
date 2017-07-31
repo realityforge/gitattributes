@@ -15,7 +15,7 @@
 require File.expand_path('../../helper', __FILE__)
 
 class Reality::TestGitAttributes < Reality::TestCase
-  def test_basic_operation_using_default_attribtues
+  def test_basic_operation_using_default_attributes
     content = <<TEXT
 * -text
 TEXT
@@ -24,7 +24,7 @@ TEXT
 
     attributes = Reality::GitAttributes.new(dir)
     assert_equal("#{dir}/.gitattributes", attributes.attributes_file)
-    assert_equal({ '*' => { 'text' => false } }, attributes.patterns)
+    assert_equal(['* -text'], attributes.patterns.collect{|p|p.to_s})
 
     assert_equal({ 'text' => false }, attributes.attributes('README.md'))
   end
@@ -39,7 +39,7 @@ TEXT
 
     attributes = Reality::GitAttributes.new(dir, attributes_file)
     assert_equal(attributes_file, attributes.attributes_file)
-    assert_equal({ '*' => { 'text' => false } }, attributes.patterns)
+    assert_equal(['* -text'], attributes.patterns.collect{|p|p.to_s})
 
     assert_equal({ 'text' => false }, attributes.attributes('README.md'))
     assert_equal({ 'text' => false }, attributes.attributes('docs/README.md'))
@@ -53,8 +53,7 @@ TEXT
     write_standard_file(dir, content)
 
     attributes = Reality::GitAttributes.new(dir)
-    assert_equal({ '*.textile' => { 'text' => true, 'crlf' => false, 'binary' => false } },
-                 attributes.patterns)
+    assert_equal(['*.textile text -crlf -binary'], attributes.patterns.collect{|p|p.to_s})
 
     assert_equal({}, attributes.attributes('README.md'))
     assert_equal({ 'text' => true, 'crlf' => false, 'binary' => false }, attributes.attributes('README.textile'))
@@ -70,11 +69,7 @@ TEXT
     write_standard_file(dir, content)
 
     attributes = Reality::GitAttributes.new(dir)
-    assert_equal({
-                   '*' => { 'text' => false },
-                   '*.textile' => { 'text' => true, 'crlf' => false, 'binary' => false }
-                 },
-                 attributes.patterns)
+    assert_equal(['* -text', '*.textile text -crlf -binary'], attributes.patterns.collect{|p|p.to_s})
 
     assert_equal({ 'text' => false }, attributes.attributes('README.md'))
     assert_equal({ 'text' => true, 'crlf' => false, 'binary' => false }, attributes.attributes('doc/X.textile'))
@@ -91,7 +86,7 @@ TEXT
 
     attributes = Reality::GitAttributes.new(dir)
     assert_equal("#{dir}/.gitattributes", attributes.attributes_file)
-    assert_equal({ '*' => { 'text' => false } }, attributes.patterns)
+    assert_equal(['* -text'], attributes.patterns.collect{|p|p.to_s})
   end
 
   def test_relative_dir
@@ -103,7 +98,7 @@ TEXT
 
     attributes = Reality::GitAttributes.new(dir)
     assert_equal("#{dir}/.gitattributes", attributes.attributes_file)
-    assert_equal({ 'doc/*.md' => { 'text' => true } }, attributes.patterns)
+    assert_equal(['doc/*.md text'], attributes.patterns.collect{|p|p.to_s})
 
     assert_equal({}, attributes.attributes('README.md'))
     assert_equal({ 'text' => true }, attributes.attributes('doc/X.md'))
@@ -119,7 +114,7 @@ TEXT
 
     attributes = Reality::GitAttributes.new(dir, attributes_file)
     assert_equal(attributes_file, attributes.attributes_file)
-    assert_equal({ '*' => { 'text' => false } }, attributes.patterns)
+    assert_equal(['* -text'], attributes.patterns.collect{|p|p.to_s})
 
     assert_equal({}, attributes.attributes('README.md'))
     assert_equal({ 'text' => false }, attributes.attributes('foo/docs/README.md'))

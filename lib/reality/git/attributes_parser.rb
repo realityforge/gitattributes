@@ -30,7 +30,7 @@ module Reality #nodoc
 
         # Parses the specified Git attributes file.
         def parse_file(filename)
-          pairs = []
+          rules = []
           comment = '#'
 
           IO.readlines(filename).each do |line|
@@ -38,13 +38,13 @@ module Reality #nodoc
 
             pattern, attrs = line.split(/\s+/, 2)
 
-            parsed = attrs ? parse_attributes(attrs) : {}
+            parsed_attributes = attrs ? parse_attributes(attrs) : {}
 
-            pairs << [pattern, parsed]
+            rules << AttributeRule.new(pattern, parsed_attributes)
           end
 
           # Newer entries take precedence over older entries.
-          pairs.reverse.to_h
+          rules
         end
 
         private

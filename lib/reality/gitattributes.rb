@@ -46,8 +46,8 @@ module Reality #nodoc
 
       relative_path = File.dirname(@attributes_file)
 
-      @patterns.each do |pattern, attrs|
-        return attrs if File.fnmatch?(File.join(relative_path, pattern), full_path)
+      @patterns.reverse.each do |rule|
+        return rule.attributes if File.fnmatch?(File.join(relative_path, rule.pattern), full_path)
       end
 
       {}
