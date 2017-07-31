@@ -7,6 +7,6 @@ Classes to parse `.gitattributes` files.
 A simple example of it's usage:
 
 ```ruby
- attributes = Reality::GitAttributes.new('/home/user/myrepo')
+ attributes = Reality::Git::Attributes.parse('/home/user/myrepo')
  attributes.attributes('README.md') # => { "eol" => "lf }
 ```
