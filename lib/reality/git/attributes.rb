@@ -19,7 +19,7 @@ module Reality #nodoc
 
       class << self
         # path - The path to the Git repository.
-        # attributes_file - The path to the ".gitattribtues" file. Defaults to "<path>/.gitattribtues".
+        # attributes_file - The path to the ".gitattributes" file. Defaults to "<path>/.gitattributes".
         # relative_path - The path to which attributes apply. Defaults to direcotyr containing attributes file.
         def parse(repository_path, attributes_file = nil, relative_path = nil)
           path = File.expand_path(repository_path)
