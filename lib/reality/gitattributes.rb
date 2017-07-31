@@ -44,8 +44,10 @@ module Reality #nodoc
     def attributes(path)
       full_path = File.join(@path, path)
 
+      relative_path = File.dirname(@attributes_file)
+
       @patterns.each do |pattern, attrs|
-        return attrs if File.fnmatch?(File.join(@path, pattern), full_path)
+        return attrs if File.fnmatch?(File.join(relative_path, pattern), full_path)
       end
 
       {}

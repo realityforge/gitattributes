@@ -109,6 +109,22 @@ TEXT
     assert_equal({ 'text' => true }, attributes.attributes('doc/X.md'))
   end
 
+  def test_gitattributes_in_subdirectory
+    content = <<TEXT
+* -text
+TEXT
+    dir = "#{working_dir}/#{::SecureRandom.hex}"
+    attributes_file = "#{dir}/foo/.gitattributes"
+    write_file(attributes_file, content)
+
+    attributes = Reality::GitAttributes.new(dir, attributes_file)
+    assert_equal(attributes_file, attributes.attributes_file)
+    assert_equal({ '*' => { 'text' => false } }, attributes.patterns)
+
+    assert_equal({}, attributes.attributes('README.md'))
+    assert_equal({ 'text' => false }, attributes.attributes('foo/docs/README.md'))
+  end
+
   def write_standard_file(dir, content)
     write_file("#{dir}/.gitattributes", content)
   end
