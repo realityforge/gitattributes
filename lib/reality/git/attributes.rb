@@ -24,7 +24,7 @@ module Reality #nodoc
         def parse(repository_path, attributes_file = nil, relative_path = nil)
           path = File.expand_path(repository_path)
           attributes_file ||= "#{path}/.gitattributes"
-          rules = File.exist?(attributes_file) ? Reality::Git::AttributesParser.parse_file(attributes_file) : {}
+          rules = File.exist?(attributes_file) ? Reality::Git::AttributesParser.parse_file(attributes_file) : []
           Attributes.new(repository_path, attributes_file, relative_path, rules)
         end
       end
