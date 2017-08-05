@@ -61,14 +61,22 @@ module Reality #nodoc
         @rules << AttributeRule.new(pattern, attributes)
       end
 
+      # Adds a rule for pattern that sets the text attribute.
+      # This means that the file will be stored in the repository with line endings converted to LF
       def text_rule(pattern, attributes = {})
         rule(pattern, { :text => true }.merge(attributes))
       end
 
+      # Adds a rule for pattern that sets the text attribute and eol=lf.
+      # This means that the file will be stored in the repository with line endings converted to LF
+      # *and* the local checkout will have line endings converted to LF
       def unix_text_rule(pattern, attributes = {})
         text_rule(pattern, { :eol => 'lf' }.merge(attributes))
       end
 
+      # Adds a rule for pattern that sets the text attribute and eol=crlf.
+      # This means that the file will be stored in the repository with line endings converted to LF
+      # *and* the local checkout will have line endings converted to CRLF
       def dos_text_rule(pattern, attributes = {})
         text_rule(pattern, { :eol => 'crlf' }.merge(attributes))
       end
