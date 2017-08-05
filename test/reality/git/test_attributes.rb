@@ -53,7 +53,7 @@ TEXT
     write_standard_file(dir, content)
 
     attributes = Reality::Git::Attributes.parse(dir)
-    assert_equal(['*.textile text -crlf -binary'], attributes.rules.collect {|p| p.to_s})
+    assert_equal(['*.textile text -binary -crlf'], attributes.rules.collect {|p| p.to_s})
 
     assert_equal({}, attributes.attributes('README.md'))
     assert_equal({ 'text' => true, 'crlf' => false, 'binary' => false }, attributes.attributes('README.textile'))
@@ -69,7 +69,7 @@ TEXT
     write_standard_file(dir, content)
 
     attributes = Reality::Git::Attributes.parse(dir)
-    assert_equal(['* -text', '*.textile text -crlf -binary'], attributes.rules.collect {|p| p.to_s})
+    assert_equal(['* -text', '*.textile text -binary -crlf'], attributes.rules.collect {|p| p.to_s})
 
     assert_equal({ 'text' => false }, attributes.attributes('README.md'))
     assert_equal({ 'text' => true, 'crlf' => false, 'binary' => false }, attributes.attributes('doc/X.textile'))
@@ -254,7 +254,7 @@ TEXT
     attributes.dos_text_rule('*.cmd')
     attributes.dos_text_rule('*.rdl', :eofnl => false)
 
-    assert_equal(['*.cmd text crlf -binary', '*.rdl text crlf -binary -eofnl'], attributes.rules.collect {|p| p.to_s})
+    assert_equal(['*.cmd text eol=crlf', '*.rdl text eol=crlf -eofnl'], attributes.rules.collect {|p| p.to_s})
   end
 
   def test_add_binary_rule

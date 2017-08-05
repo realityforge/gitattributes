@@ -16,7 +16,7 @@ module Reality #nodoc
   module Git
     # Represents a rule within the attributes file
     class AttributeRule
-      ATTR_ORDER = %w(text lf binary eofnl)
+      ATTR_ORDER = %w(text binary eol encoding eofnl)
 
       def initialize(pattern, attributes)
         @pattern = pattern
