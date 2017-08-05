@@ -62,11 +62,15 @@ module Reality #nodoc
       end
 
       def text_rule(pattern, attributes = {})
-        rule(pattern, { :text => true, :crlf => false, :binary => false }.merge(attributes))
+        rule(pattern, { :text => true }.merge(attributes))
+      end
+
+      def unix_text_rule(pattern, attributes = {})
+        text_rule(pattern, { :eol => 'lf' }.merge(attributes))
       end
 
       def dos_text_rule(pattern, attributes = {})
-        text_rule(pattern, { :crlf => true }.merge(attributes))
+        text_rule(pattern, { :eol => 'crlf' }.merge(attributes))
       end
 
       def binary_rule(pattern, attributes = {})

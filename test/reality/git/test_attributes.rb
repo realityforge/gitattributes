@@ -241,7 +241,20 @@ TEXT
     attributes.text_rule('*.md')
     attributes.text_rule('*.rake', :eofnl => false)
 
-    assert_equal(['*.md text -crlf -binary', '*.rake text -crlf -binary -eofnl'], attributes.rules.collect {|p| p.to_s})
+    assert_equal(['*.md text', '*.rake text -eofnl'], attributes.rules.collect {|p| p.to_s})
+  end
+
+  def test_add_unix_text_rule
+    dir = "#{working_dir}/#{::SecureRandom.hex}"
+
+    attributes = Reality::Git::Attributes.new(dir)
+
+    assert_equal([], attributes.rules.collect {|p| p.to_s})
+
+    attributes.unix_text_rule('*.sh')
+    attributes.unix_text_rule('*.init', :eofnl => false)
+
+    assert_equal(['*.sh text eol=lf', '*.init text eol=lf -eofnl'], attributes.rules.collect {|p| p.to_s})
   end
 
   def test_add_dos_text_rule
