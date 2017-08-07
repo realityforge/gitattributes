@@ -18,6 +18,7 @@ class Reality::Git::TestAttributeRule < Reality::TestCase
   def test_basic_operation
     rule = Reality::Git::AttributeRule.new('*', 'text' => false)
     assert_equal({ 'text' => false }, rule.attributes)
+    assert_equal('*', rule.pattern)
     assert_equal('* -text', rule.to_s)
     assert_equal(1, rule.priority)
   end
@@ -26,13 +27,22 @@ class Reality::Git::TestAttributeRule < Reality::TestCase
     rule = Reality::Git::AttributeRule.new('*', 'text' => false, 'priority' => 3)
     assert_equal(3, rule.priority)
     assert_equal({ 'text' => false }, rule.attributes)
+    assert_equal('*', rule.pattern)
     assert_equal('* -text', rule.to_s)
   end
 
   def test_many_attributes
     rule = Reality::Git::AttributeRule.new('*.rdl', 'eofnl' => false, 'text' => true, 'crlf' => true, 'binary' => false, 'ms-file' => 'RPT', 'age' => '22')
     assert_equal({ 'eofnl' => false, 'text' => true, 'crlf' => true, 'binary' => false, 'ms-file' => 'RPT', 'age' => '22' }, rule.attributes)
+    assert_equal('*.rdl', rule.pattern)
     assert_equal('*.rdl text -binary -eofnl age=22 crlf ms-file=RPT', rule.to_s)
+  end
+
+  def test_whitespace_pattern_convertee
+    rule = Reality::Git::AttributeRule.new('Read[[:space:]]Me.txt', 'text' => true, 'crlf' => true)
+    assert_equal({ 'text' => true, 'crlf' => true }, rule.attributes)
+    assert_equal('Read Me.txt', rule.pattern)
+    assert_equal('Read[[:space:]]Me.txt text crlf', rule.to_s)
   end
 
   def test_sorting

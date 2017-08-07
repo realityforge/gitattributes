@@ -29,6 +29,20 @@ TEXT
     assert_equal({ 'text' => false }, attributes.attributes('README.md'))
   end
 
+  def test_space_pattern_in_rule
+    content = <<TEXT
+Read[[:space:]]Me.txt text crlf
+TEXT
+    dir = "#{working_dir}/#{::SecureRandom.hex}"
+    write_standard_file(dir, content)
+
+    attributes = Reality::Git::Attributes.parse(dir)
+    assert_equal("#{dir}/.gitattributes", attributes.attributes_file)
+    assert_equal(['Read[[:space:]]Me.txt text crlf'], attributes.rules.collect {|p| p.to_s})
+
+    assert_equal({ 'text' => true, 'crlf' => true }, attributes.attributes('Read Me.txt'))
+  end
+
   def test_gitattributes_in_non_standard_location
     content = <<TEXT
 * -text

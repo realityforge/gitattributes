@@ -19,7 +19,7 @@ module Reality #nodoc
       ATTR_ORDER = %w(text binary eol encoding eofnl)
 
       def initialize(pattern, attributes)
-        @pattern = pattern
+        @pattern = pattern.gsub('[[:space:]]', ' ')
         @attributes = {}
         @priority = 1
         attributes.each do |k, v|
@@ -36,7 +36,7 @@ module Reality #nodoc
       attr_reader :priority
 
       def to_s
-        rule = self.pattern
+        rule = self.pattern.gsub(' ','[[:space:]]')
 
         attributes = self.attributes.dup
         ATTR_ORDER.each do |key|
