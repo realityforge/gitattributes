@@ -43,6 +43,35 @@ TEXT
     assert_equal({ 'text' => true, 'crlf' => true }, attributes.attributes('Read Me.txt'))
   end
 
+  def test_exact_match_in_subdirectory
+    content = <<TEXT
+Read[[:space:]]Me.txt text crlf
+TEXT
+    dir = "#{working_dir}/#{::SecureRandom.hex}"
+    write_standard_file(dir, content)
+
+    attributes = Reality::Git::Attributes.parse(dir)
+    assert_equal("#{dir}/.gitattributes", attributes.attributes_file)
+    assert_equal(['Read[[:space:]]Me.txt text crlf'], attributes.rules.collect {|p| p.to_s})
+
+    assert_equal({ 'text' => true, 'crlf' => true }, attributes.attributes('customer/notes/Read Me.txt'))
+  end
+
+  def test_absolute_pattern
+    content = <<TEXT
+/bin/doc/README.md text
+TEXT
+    dir = "#{working_dir}/#{::SecureRandom.hex}"
+    write_standard_file(dir, content)
+
+    attributes = Reality::Git::Attributes.parse(dir)
+    assert_equal("#{dir}/.gitattributes", attributes.attributes_file)
+    assert_equal(['/bin/doc/README.md text'], attributes.rules.collect {|p| p.to_s})
+
+    assert_equal({ 'text' => true  }, attributes.attributes('bin/doc/README.md'))
+    assert_equal({ }, attributes.attributes('not/matching/bin/doc/README.md'))
+  end
+
   def test_gitattributes_in_non_standard_location
     content = <<TEXT
 * -text

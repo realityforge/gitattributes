@@ -43,7 +43,8 @@ module Reality #nodoc
         full_path = File.join(@path, path)
 
         @rules.reverse.each do |rule|
-          return rule.attributes if File.fnmatch?(File.join(@relative_path, rule.pattern), full_path)
+          full_pattern = rule.pattern[0] == '/' ? "#{@relative_path}#{rule.pattern}" : "#{@relative_path}/**/#{rule.pattern}"
+          return rule.attributes if File.fnmatch?(full_pattern, full_path, File::FNM_PATHNAME | File::FNM_DOTMATCH)
         end
 
         {}
