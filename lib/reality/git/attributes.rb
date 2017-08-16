@@ -34,6 +34,10 @@ module Reality #nodoc
         @attributes_file = attributes_file || "#{@path}/.gitattributes"
         @relative_path = relative_path || File.dirname(@attributes_file)
         @rules = rules
+        @rule_map = {}
+        rules.each do |rule|
+          cache_rule(rule)
+        end
       end
 
       attr_reader :attributes_file
@@ -42,7 +46,7 @@ module Reality #nodoc
       def attributes(path)
         full_path = File.join(@path, path)
 
-        @rules.reverse.each do |rule|
+        self.rules.reverse.each do |rule|
           full_pattern = rule.pattern[0] == '/' ? "#{@relative_path}#{rule.pattern}" : "#{@relative_path}/**/#{rule.pattern}"
           return rule.attributes if File.fnmatch?(full_pattern, full_path, File::FNM_PATHNAME | File::FNM_DOTMATCH)
         end
@@ -52,14 +56,17 @@ module Reality #nodoc
 
       def write_to(filename, options = {})
         prefix = options[:prefix].nil? ? '' : "#{options[:prefix]}\n"
-        rules = options[:normalize] ? @rules.dup.sort.uniq : @rules
+        rules = self.rules
+        rules = rules.dup.sort.uniq if options[:normalize]
         content = rules.collect {|r| r.to_s}.join("\n")
         content += "\n" unless content.empty?
         IO.write(filename, prefix + content)
       end
 
       def rule(pattern, attributes)
-        @rules << AttributeRule.new(pattern, attributes)
+        rule = AttributeRule.new(pattern, attributes)
+        @rules << rule
+        cache_rule(rule)
       end
 
       # Adds a rule for pattern that sets the text attribute.
@@ -89,6 +96,20 @@ module Reality #nodoc
       # Returns a list of attribute rules to apply.
       def rules
         @rules.dup
+      end
+
+      def rules_by_pattern(pattern)
+        @rule_map[pattern].nil? ? [] : @rule_map[pattern].dup
+      end
+
+      def rules_by_pattern?(pattern)
+        !rules_by_pattern(pattern).empty?
+      end
+
+      private
+
+      def cache_rule(rule)
+        (@rule_map[rule.pattern] ||= []) << rule
       end
     end
   end

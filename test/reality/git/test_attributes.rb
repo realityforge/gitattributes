@@ -27,6 +27,24 @@ TEXT
     assert_equal(['* -text'], attributes.rules.collect {|p| p.to_s})
 
     assert_equal({ 'text' => false }, attributes.attributes('README.md'))
+    assert_equal(['* -text'], attributes.rules_by_pattern('*').collect {|p| p.to_s})
+    assert_equal(true, attributes.rules_by_pattern?('*'))
+    assert_equal(false, attributes.rules_by_pattern?('XXX'))
+  end
+
+  def test_multiple_rules_with_same_pattern
+    content = <<TEXT
+* -text
+* binary
+TEXT
+    dir = "#{working_dir}/#{::SecureRandom.hex}"
+    write_standard_file(dir, content)
+
+    attributes = Reality::Git::Attributes.parse(dir)
+    assert_equal("#{dir}/.gitattributes", attributes.attributes_file)
+    assert_equal(['* -text', '* binary -diff'], attributes.rules_by_pattern('*').collect {|p| p.to_s})
+    assert_equal(true, attributes.rules_by_pattern?('*'))
+    assert_equal(false, attributes.rules_by_pattern?('XXX'))
   end
 
   def test_space_pattern_in_rule
@@ -41,6 +59,9 @@ TEXT
     assert_equal(['Read[[:space:]]Me.txt text crlf'], attributes.rules.collect {|p| p.to_s})
 
     assert_equal({ 'text' => true, 'crlf' => true }, attributes.attributes('Read Me.txt'))
+    assert_equal(['Read[[:space:]]Me.txt text crlf'], attributes.rules_by_pattern('Read Me.txt').collect {|p| p.to_s})
+    assert_equal(true, attributes.rules_by_pattern?('Read Me.txt'))
+    assert_equal(false, attributes.rules_by_pattern?('XXX'))
   end
 
   def test_exact_match_in_subdirectory
@@ -70,6 +91,9 @@ TEXT
 
     assert_equal({ 'text' => true  }, attributes.attributes('bin/doc/README.md'))
     assert_equal({ }, attributes.attributes('not/matching/bin/doc/README.md'))
+    assert_equal(['/bin/doc/README.md text'], attributes.rules_by_pattern('/bin/doc/README.md').collect {|p| p.to_s})
+    assert_equal(true, attributes.rules_by_pattern?('/bin/doc/README.md'))
+    assert_equal(false, attributes.rules_by_pattern?('XXX'))
   end
 
   def test_gitattributes_in_non_standard_location
