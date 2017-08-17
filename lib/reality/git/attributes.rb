@@ -54,6 +54,20 @@ module Reality #nodoc
         {}
       end
 
+      # Returns the rules for the specified path.
+      def rules_for_path(path)
+        full_path = File.join(@path, path)
+
+        rules = []
+
+        self.rules.each do |rule|
+          full_pattern = rule.pattern[0] == '/' ? "#{@relative_path}#{rule.pattern}" : "#{@relative_path}/**/#{rule.pattern}"
+          rules << rule if File.fnmatch?(full_pattern, full_path, File::FNM_PATHNAME | File::FNM_DOTMATCH)
+        end
+
+        rules
+      end
+
       def write_to(filename, options = {})
         prefix = options[:prefix].nil? ? '' : "#{options[:prefix]}\n"
         rules = self.rules

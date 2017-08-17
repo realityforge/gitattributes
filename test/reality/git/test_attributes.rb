@@ -49,6 +49,17 @@ TEXT
     assert_equal([], attributes.rules.collect {|p| p.to_s})
   end
 
+  def test_rules_for_path
+    attributes = Reality::Git::Attributes.new("#{working_dir}/#{::SecureRandom.hex}")
+
+    attributes.text_rule('*.md')
+    attributes.text_rule('*.rake')
+
+    assert_equal([], attributes.rules_for_path('Foo.txt').collect {|p| p.to_s})
+    assert_equal(['*.md text'], attributes.rules_for_path('Foo.md').collect {|p| p.to_s})
+    assert_equal(['*.md text'], attributes.rules_for_path('doc/MyDoc.md').collect {|p| p.to_s})
+  end
+
   def test_multiple_rules_with_same_pattern
     content = <<TEXT
 * -text
