@@ -66,4 +66,20 @@ class Reality::Git::TestAttributeRule < Reality::TestCase
     assert_equal(false, rule1.eql?(rule2))
     assert_not_equal(rule1.hash, rule2.hash)
   end
+
+  def test_parse_line_comment
+    rule = Reality::Git::AttributeRule.parse_line('# This is a comment')
+    assert_equal nil, rule
+  end
+
+  def test_parse_line_empty
+    rule = Reality::Git::AttributeRule.parse_line(' ')
+    assert_equal nil, rule
+  end
+
+  def test_parse_line
+    rule = Reality::Git::AttributeRule.parse_line('*.rdl text')
+    assert_equal '*.rdl', rule.pattern
+    assert_equal({ 'text' => true }, rule.attributes)
+  end
 end

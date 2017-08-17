@@ -13,5 +13,4 @@
 #
 
 require 'reality/git/attribute_rule'
-require 'reality/git/attributes_parser'
 require 'reality/git/attributes'
