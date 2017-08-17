@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name               = %q{gitattributes}
-  s.version            = '2.8.0'
+  s.version            = '2.9.0'
   s.platform           = Gem::Platform::RUBY
 
   s.authors            = ['Peter Donald']
