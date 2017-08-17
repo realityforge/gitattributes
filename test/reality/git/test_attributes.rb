@@ -215,6 +215,40 @@ TEXT
     assert_equal({ 'text' => false }, attributes.attributes('foo/docs/README.md'))
   end
 
+  def test_write
+    content = <<TEXT
+* -text
+TEXT
+    dir = "#{working_dir}/#{::SecureRandom.hex}"
+    write_standard_file(dir, content)
+
+    attributes = Reality::Git::Attributes.parse(dir)
+    assert_equal("#{dir}/.gitattributes", attributes.attributes_file)
+    assert_equal(['* -text'], attributes.rules.collect {|p| p.to_s})
+
+    attributes.write
+
+    assert_equal(<<TEXT, IO.read("#{dir}/.gitattributes"))
+* -text
+TEXT
+  end
+
+  def test_as_file_contents
+    content = <<TEXT
+* -text
+TEXT
+    dir = "#{working_dir}/#{::SecureRandom.hex}"
+    write_standard_file(dir, content)
+
+    attributes = Reality::Git::Attributes.parse(dir)
+    assert_equal("#{dir}/.gitattributes", attributes.attributes_file)
+    assert_equal(['* -text'], attributes.rules.collect {|p| p.to_s})
+
+    assert_equal(<<TEXT, attributes.as_file_contents)
+* -text
+TEXT
+  end
+
   def test_write_to
     content = <<TEXT
 * -text

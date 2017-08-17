@@ -68,13 +68,21 @@ module Reality #nodoc
         rules
       end
 
-      def write_to(filename, options = {})
+      def as_file_contents(options = {})
         prefix = options[:prefix].nil? ? '' : "#{options[:prefix]}\n"
         rules = self.rules
         rules = rules.dup.sort.uniq if options[:normalize]
         content = rules.collect {|r| r.to_s}.join("\n")
         content += "\n" unless content.empty?
-        IO.write(filename, prefix + content)
+        prefix + content
+      end
+
+      def write_to(filename, options = {})
+        IO.write(filename, as_file_contents(options))
+      end
+
+      def write(options = {})
+        write_to(@attributes_file, options)
       end
 
       def rule(pattern, attributes)
