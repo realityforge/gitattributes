@@ -67,6 +67,11 @@ module Reality #nodoc
         rule = AttributeRule.new(pattern, attributes)
         @rules << rule
         cache_rule(rule)
+        rule
+      end
+
+      def remove_rule(rule)
+        uncache_rule(rule) if @rules.delete(rule)
       end
 
       # Adds a rule for pattern that sets the text attribute.
@@ -110,6 +115,10 @@ module Reality #nodoc
 
       def cache_rule(rule)
         (@rule_map[rule.pattern] ||= []) << rule
+      end
+
+      def uncache_rule(rule)
+        (@rule_map[rule.pattern] ||= []).delete(rule)
       end
     end
   end

@@ -32,6 +32,23 @@ TEXT
     assert_equal(false, attributes.rules_by_pattern?('XXX'))
   end
 
+  def test_remove_rule
+    attributes = Reality::Git::Attributes.new("#{working_dir}/#{::SecureRandom.hex}")
+
+    rule1 = attributes.text_rule('*.md')
+    rule2 = attributes.text_rule('*.rake', :eofnl => false)
+
+    assert_equal(['*.md text', '*.rake text -eofnl'], attributes.rules.collect {|p| p.to_s})
+
+    attributes.remove_rule(rule1)
+
+    assert_equal(['*.rake text -eofnl'], attributes.rules.collect {|p| p.to_s})
+
+    attributes.remove_rule(rule2)
+
+    assert_equal([], attributes.rules.collect {|p| p.to_s})
+  end
+
   def test_multiple_rules_with_same_pattern
     content = <<TEXT
 * -text
