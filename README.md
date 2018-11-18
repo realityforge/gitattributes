@@ -1,6 +1,6 @@
 # gitattributes
 
-[![Build Status](https://secure.travis-ci.org/realityforge/gitattributes.png?branch=master)](http://travis-ci.org/realityforge/gitattributes)
+[![Build Status](https://secure.travis-ci.org/realityforge/gitattributes.svg?branch=master)](http://travis-ci.org/realityforge/gitattributes)
 
 Classes to parse `.gitattributes` files.
 
